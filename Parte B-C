@@ -13,7 +13,7 @@
 #define botonModo   5  // BOTÓN PULL-DOWN 
 
 // Variables globales
-uint8_t contador = 0;
+uint8_t contador = 0; //INCREMENTA O DECREMENTA
 uint8_t modo = 0; // 0 = decimal, 1 = binario
 
 // Antirrebote
@@ -48,13 +48,13 @@ void setup() {
 void loop() {
   unsigned long ahora = millis();
 
-  // Cambio de HIGH a LOW
+  // Cambio de HIGH a LOW si se presionó el boton 
   bool subeAct = digitalRead(botonSube);
   if (subeAnt == HIGH && subeAct == LOW && ahora - ultimoSube > retardo) {
     contador++;
     if (modo == 0 && contador > 3) contador = 0;
     if (modo == 1 && contador > 15) contador = 0; //Si supera el límite se reinicia
-    mostrarLED(contador);
+    mostrarLED(contador); //ACTUALIZAR LEDS
     //Se actualiza el estado anterior para la proxima vuelta
     ultimoSube = ahora;
   }
@@ -64,7 +64,7 @@ void loop() {
   bool bajaAct = digitalRead(botonBaja);
   if (bajaAnt == HIGH && bajaAct == LOW && ahora - ultimoBaja > retardo) {
     if (contador == 0) {
-      contador = (modo == 0) ? 3 : 15;
+      contador = (modo == 0) ? 3 : 15; //si el contador ya estaba en 0 regresa al máximo (15)
     } else {
       contador--;
     }
@@ -76,9 +76,9 @@ void loop() {
   // BOTÓN MODO (PULL-DOWN: detectamos flanco ASCENDENTE)
   bool modoAct = digitalRead(botonModo);
   if (modoAnt == LOW && modoAct == HIGH && ahora - ultimoModo > retardo) {
-    modo = !modo; //Cmabia de modo decimal a binario
+    modo = !modo; //Cambia de modo decimal a binario
     contador = 0;
-    mostrarLED(contador);
+    mostrarLED(contador); //nuevo modo en 0
     ultimoModo = ahora;
   }
   modoAnt = modoAct;
